@@ -1,6 +1,6 @@
 # ------------------------------------------------------------
 # class : ImsSector
-# descr : exchanges class
+# descr : sector class
 #
 # in    : (sec_name, sec_rep_order)
 # out   : n/a
