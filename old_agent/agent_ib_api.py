@@ -24,7 +24,7 @@ import datetime
 from ibapi.client import EClient
 from ibapi.contract import Contract as IBcontract
 from apis.ib_api.OrderSamples import OrderSamples
-from agents.agent_trade import recheck_holding_status, update_holding, update_prices
+from ava_agents.agent_trade import recheck_holding_status, update_holding, update_prices
 from ibapi.wrapper import EWrapper
 import numpy as np
 import pandas as pd

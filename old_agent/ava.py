@@ -18,8 +18,8 @@
 #------------------------------------------------------------
 
 import time
-from agents.agent_ib_api import cleanup_environment, get_IB_stockprice_data, setup_environment
-from agents.agent_trade import AgentTrade, show_holding
+from ava_agents.agent_ib_api import cleanup_environment, get_IB_stockprice_data, setup_environment
+from ava_agents.agent_trade import AgentTrade, show_holding
 import asyncio
 
 async def check_status(tradeagent):

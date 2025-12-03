@@ -18,7 +18,7 @@
 # 2022-11-05 200 DW  Reorg
 #------------------------------------------------------------
 
-from agents.agent_action_streak_todos import process_streak_todo_list
+from ava_agents.agent_action_streak_todos import process_streak_todo_list
 from database.db_objects.ImsLoadTodoDB import get_load_todo, ImsLoadTodoDB
 from utils.config import DB_HOST, DB_PORT, DB_TNS_SERVICE, DB_USER_NAME, DB_PASSWORD
 from utils.utils_database import close_db, open_db
