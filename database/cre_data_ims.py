@@ -14,7 +14,7 @@ from agents.AvaAgtOra    import AvaAgtOra
 from agents.AvaAgtLog    import AvaAgtLog
 
 from objects.ImsExchange import ImsExchange
-#from objects.ImsSector   import ImsSector
+from objects.ImsSector   import ImsSector
 
 # ============================================================================================================================
 # config
@@ -59,7 +59,7 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
 
     row_lis = []
     
-    row_lis.append(ImsExchange('ASK',      'Australian Securities Exchange', '', '').obj_get(dict))
+    row_lis.append(ImsSector('BANK', '1',).obj_get(dict))
 
     
     agt_log.title_put(text = 'finished creating data')

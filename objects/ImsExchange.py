@@ -75,14 +75,14 @@ class ImsExchange:
     
     def __repr__(self): 
         
-        return f"{self.peo_key}"
+        return f"{self.exc_symbol}"
     
     
     def __str__(self): 
         
-        return f"{self.peo_key}"
+        return f"{self.exc_symbol}"
 
 
     def __unicode__(self): 
             
-        return f"{self.peo_key}"
+        return f"{self.exc_symbol}"

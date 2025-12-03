@@ -55,7 +55,7 @@ class ImsSector:
         
     def put_db(self, agt_db):
     
-        agt_db.agt_put(table_name = 'IMS_EXCHANGES', row_data = [obj_name_val_dict(obj = self)])  
+        agt_db.agt_put(table_name = 'IMS_SECTORS', row_data = [obj_name_val_dict(obj = self)])  
           
         return
     
@@ -73,14 +73,14 @@ class ImsSector:
     
     def __repr__(self): 
         
-        return f"{self.peo_key}"
+        return f"{self.sec_name}"
     
     
     def __str__(self): 
         
-        return f"{self.peo_key}"
+        return f"{self.sec_name}"
 
 
     def __unicode__(self): 
             
-        return f"{self.peo_key}"
+        return f"{self.sec_name}"
