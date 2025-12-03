@@ -61,7 +61,8 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     
     row_lis.append(ImsSector('BANK', '1',).obj_get(dict))
 
-    
+    agt_ora.agt_put(table_name = 'IMS_SECTORS', row_data = row_lis, agt_log = agt_log)
+  
     agt_log.title_put(text = 'finished creating data')
         
     return
