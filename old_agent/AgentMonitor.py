@@ -40,7 +40,7 @@ class AgentMonitor:
     # Get methods
     #
     
-    # Generic methods that should exist for all agents
+    # Generic methods that should exist for all ava_agents
     
     def get_uid(self):
         
@@ -132,7 +132,7 @@ class AgentMonitor:
     # Set methods
     #
     
-    # Generic methods that should exist for all agents
+    # Generic methods that should exist for all ava_agents
     
     def set_uid(self, uid):
         
