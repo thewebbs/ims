@@ -26,7 +26,7 @@
 
 from utils.config import DB_HOST, DB_PORT, DB_TNS_SERVICE, DB_USER_NAME, DB_PASSWORD
 from utils.utils_database import close_db, open_db
-from agents.agent_rule_simple_change import Agent_rule_simple_change, add_new_item, get_next_action 
+from ava_agents.agent_rule_simple_change import Agent_rule_simple_change, add_new_item, get_next_action 
 from database.db_objects.ImsHistMktDataDB import get_last_bid_ask_price_in_range
 
 

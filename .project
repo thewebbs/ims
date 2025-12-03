@@ -3,6 +3,7 @@
 	<name>ims</name>
 	<comment></comment>
 	<projects>
+		<project>ava</project>
 		<project>ims</project>
 	</projects>
 	<buildSpec>
