@@ -20,7 +20,7 @@
 
 
 from time import sleep
-from agents.agent_get_ib_market_data import cleanup_environment, get_IB_stockprice_data, setup_environment
+from ava_agents.agent_get_ib_market_data import cleanup_environment, get_IB_stockprice_data, setup_environment
 
 
 def agent_run_get_ib_market_data():
