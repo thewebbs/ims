@@ -10,11 +10,12 @@
 # 2025-12-03 101 DW  initial write
 # ------------------------------------------------------------
 
-from agents.AvaAgtOra    import AvaAgtOra
-from agents.AvaAgtLog    import AvaAgtLog
+from agents.AvaAgtOra        import AvaAgtOra
+from agents.AvaAgtLog        import AvaAgtLog
 
-from objects.ImsExchange import ImsExchange
-from objects.ImsSector   import ImsSector
+from objects.ImsCurrencyType import ImsCurrencyType
+from objects.ImsExchange     import ImsExchange
+from objects.ImsSector       import ImsSector
 
 # ============================================================================================================================
 # config
@@ -35,8 +36,10 @@ from utils.config import FOLDER_ERR,  FOLDER_LOG
 def cre_data_ims(agt_err, agt_log, agt_ora):
    
     agt_log.title_put(text = 'starting creating data')
-
+    
+    #
     # exchanges
+    #
     
     agt_log.title_put(text = 'ImsExchanges')
 
@@ -53,7 +56,9 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     
     agt_ora.agt_put(table_name = 'IMS_EXCHANGES', row_data = row_lis, agt_log = agt_log)
 
+    #
     # sectors
+    #
     
     agt_log.title_put(text = 'ImsSectors')
 
@@ -62,6 +67,22 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     row_lis.append(ImsSector('BANK', '1',).obj_get(dict))
 
     agt_ora.agt_put(table_name = 'IMS_SECTORS', row_data = row_lis, agt_log = agt_log)
+
+    #
+    # currency types
+    #
+    
+    agt_log.title_put(text = 'ImsCurrencyTypes')
+
+    row_lis = []
+    
+    row_lis.append(ImsCurrencyType('AUD', 'Australian dollar').obj_get(dict))
+    row_lis.append(ImsCurrencyType('CAD', 'Canadian dollar'  ).obj_get(dict))
+    row_lis.append(ImsCurrencyType('EUR', 'Euro'             ).obj_get(dict))
+    row_lis.append(ImsCurrencyType('GBP', 'British pound'    ).obj_get(dict))
+    row_lis.append(ImsCurrencyType('USD', 'US dollar'        ).obj_get(dict))
+
+    agt_ora.agt_put(table_name = 'IMS_CURRENCY_TYPES', row_data = row_lis, agt_log = agt_log)
   
     agt_log.title_put(text = 'finished creating data')
         
