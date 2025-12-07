@@ -54,7 +54,7 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     row_lis.append(ImsExchange('TSE',      'Tokyo Stock Exchange',           '', '').obj_get(dict))
     row_lis.append(ImsExchange('TSX',      'Toronto Stock Exchange',         '', '').obj_get(dict))
     
-    agt_ora.agt_put(table_name = 'IMS_EXCHANGES', row_data = row_lis, agt_log = agt_log)
+    agt_ora.agt_put(table_name = 'IMS_EXCHANGES', row_data_lis = row_lis, agt_log = agt_log)
 
     #
     # sectors
@@ -66,7 +66,7 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     
     row_lis.append(ImsSector('BANK', '1',).obj_get(dict))
 
-    agt_ora.agt_put(table_name = 'IMS_SECTORS', row_data = row_lis, agt_log = agt_log)
+    agt_ora.agt_put(table_name = 'IMS_SECTORS', row_data_lis = row_lis, agt_log = agt_log)
 
     #
     # currency types
@@ -82,7 +82,7 @@ def cre_data_ims(agt_err, agt_log, agt_ora):
     row_lis.append(ImsCurrencyType('GBP', 'British pound'    ).obj_get(dict))
     row_lis.append(ImsCurrencyType('USD', 'US dollar'        ).obj_get(dict))
 
-    agt_ora.agt_put(table_name = 'IMS_CURRENCY_TYPES', row_data = row_lis, agt_log = agt_log)
+    agt_ora.agt_put(table_name = 'IMS_CURRENCY_TYPES', row_data_lis = row_lis, agt_log = agt_log)
   
     agt_log.title_put(text = 'finished creating data')
         
