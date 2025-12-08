@@ -13,6 +13,8 @@ from   ibapi.sync_wrapper import TWSSyncWrapper
 from   ibapi.contract     import Contract
 import oracledb
 from   datetime           import datetime
+from   zoneinfo import ZoneInfo
+
 from   agents.AvaAgtOra   import AvaAgtOra
 from   agents.AvaAgtLog   import AvaAgtLog
 from   objects.ImsHistMktData import ImsHistMktData
@@ -128,12 +130,24 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
                 print(f"Historical BID data: {len(bid_bars)} bid_bars")
                 for bid_bar in bid_bars[:3]: # Print first 3 bars
                     
+                    date_str = bid_bar.date
+                    # convert the date string to the correct format
+                    # Split into datetime part and timezone part
+                    dt_part, tz_part = date_str.rsplit(" ", 1)
+
+                    # Parse the datetime portion
+                    dt_obj = datetime.strptime(dt_part, "%Y%m%d %H:%M:%S")
+
+                    # Attach timezone
+                    dt_obj = dt_obj.replace(tzinfo=ZoneInfo(tz_part))
+                    print(dt_obj)
+
                     # save the BID data as an object before adding it in a Dict for the
                     # key of inv_ticker, inv_start_datetime, freq_type
                     
                     new_hist_mkt_data = ImsHistMktData(hmd_inv_ticker           = this_ticker, 
-                                                       hmd_start_datetime       = bid_bar.date, 
-                                                       hmd_end_datetime         = bid_bar.date, 
+                                                       hmd_start_datetime       = dt_obj, 
+                                                       hmd_end_datetime         = dt_obj, 
                                                        hmd_freq_type            = 'DAILY', 
                                                        hmd_start_bid_price      = bid_bar.open, 
                                                        hmd_highest_bid_price    = bid_bar.high, 
@@ -179,11 +193,23 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
                 print(f"Historical ASK data: {len(bid_bars)} ask_bars")
                 for ask_bar in ask_bars[:3]: # Print first 3 bars
                     
-                    # save the BID data as an object before adding it in a Dict for this inv_ticker key
+                    date_str = ask_bar.date
+                    # convert the date string to the correct format
+                    # Split into datetime part and timezone part
+                    dt_part, tz_part = date_str.rsplit(" ", 1)
+
+                    # Parse the datetime portion
+                    dt_obj = datetime.strptime(dt_part, "%Y%m%d %H:%M:%S")
+
+                    # Attach timezone
+                    dt_obj = dt_obj.replace(tzinfo=ZoneInfo(tz_part))
+                    
+                    # save the ASK data as an object before adding it in a Dict for the
+                    # key of inv_ticker, inv_start_datetime, freq_type
                     
                     new_hist_mkt_data = ImsHistMktData(hmd_inv_ticker           = this_ticker, 
-                                                       hmd_start_datetime       = ask_bar.date, 
-                                                       hmd_end_datetime         = ask_bar.date, 
+                                                       hmd_start_datetime       = dt_obj, 
+                                                       hmd_end_datetime         = dt_obj,        
                                                        hmd_freq_type            = 'DAILY', 
                                                        hmd_start_bid_price      = 0, 
                                                        hmd_highest_bid_price    = 0, 
@@ -262,12 +288,11 @@ def save_hist_market_data(agt_err, agt_log, agt_ora, hist_mkt_data_dict):
     
     # loop through the dict, pulling out one record at a time and saving it to the database
     
-    for key, obj in hist_mkt_data_dict.items():
-        
-        hmd_inv_ticker, hmd_start_datetime, hmd_freq_type = key  # unpack the composite key
+    for obj in hist_mkt_data_dict.values():
+        print(obj)
+        obj.put_db(agt_db = agt_ora)
     
-        agt_ora.agt_put(table_name = 'IMS_HIST_MKT_DATA', data_dict = obj) 
-
+    
     return status
   
   

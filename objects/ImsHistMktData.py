@@ -85,7 +85,7 @@ class ImsHistMktData:
         
     def put_db(self, agt_db):
     
-        agt_db.agt_put(table_name = 'IMS_HIST_MKT_DATA', row_data = [obj_name_val_dict(obj = self)])  
+        agt_db.agt_put(table_name = 'IMS_HIST_MKT_DATA', row_data_lis = [obj_name_val_dict(obj = self)])  
           
         return
     
@@ -103,14 +103,14 @@ class ImsHistMktData:
     
     def __repr__(self): 
         
-        return f"{self.inv_ticker}"
+        return f"{self.hmd_inv_ticker}"
     
     
     def __str__(self): 
         
-        return f"{self.inv_ticker}"
+        return f"{self.hmd_inv_ticker}"
 
 
     def __unicode__(self): 
             
-        return f"{self.exc_symbol}"
+        return f"{self.hmd_inv_ticker}"
