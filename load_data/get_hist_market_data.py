@@ -198,7 +198,8 @@ def mw_get_hist_mkt_data(agt_err, agt_log, agt_ora):
         # Now we have the dict full of all of the data we should save it to the database
             
         status = save_hist_market_data(agt_err, agt_log, agt_ora, hist_mkt_data_dict)
-    
+        print("Status after saving to database", status)
+        
     finally:
         # Disconnect
         print("Disconnecting...")
@@ -243,70 +244,9 @@ def save_hist_market_data(agt_err, agt_log, agt_ora, hist_mkt_data_dict):
     
     for key, obj in hist_mkt_data_dict.items():
         
-        ticker, start_dt, end_dt, freq = key  # unpack the composite key
+        hmd_inv_ticker, hmd_start_datetime, hmd_freq_type = key  # unpack the composite key
     
-        print(f"Processing record for {ticker} [{freq}] from {start_dt} to {end_dt}")
-        
-        # Access attributes from the object
-        print("Last Bid Price:", obj.hmd_last_bid_price)
-        print("Total Volume:", obj.hmd_total_traded_volume)
-    
-        # Example: update something
-        obj.hmd_last_bid_price += 1.0  # pretend adjustment
-        print("Adjusted Last Bid Price:", obj.hmd_last_bid_price)
-    
-        print("-" * 40)
-    
-    print(f" {HMD_START_DATETIME}: O={HMD_START_BID_PRICE}, H={HMD_HIGHEST_BID_PRICE}, L={HMD_LOWEST_BID_PRICE}, C={HMD_LAST_BID_PRICE}, V={HMD_TOTAL_TRADED_VOLUME}")
-  
-    
-    
-    # Example single row of data
-    '''
-    params = {
-        "HMD_INV_TICKER"          : HMD_INV_TICKER,
-        "HMD_START_DATETIME"      : HMD_START_DATETIME,
-        "HMD_END_DATETIME"        : HMD_END_DATETIME,
-        "HMD_FREQ_TYPE"           : "DAILY",
-        "HMD_START_BID_PRICE"     : HMD_START_BID_PRICE,
-        "HMD_HIGHEST_BID_PRICE"   : HMD_HIGHEST_BID_PRICE,
-        "HMD_LOWEST_BID_PRICE"    : HMD_LOWEST_BID_PRICE,
-        "HMD_LAST_BID_PRICE"      : HMD_LAST_BID_PRICE,
-        "HMD_START_ASK_PRICE"     : 1,
-        "HMD_HIGHEST_ASK_PRICE"   : 1,
-        "HMD_LOWEST_ASK_PRICE"    : 1,
-        "HMD_LAST_ASK_PRICE"      : 1,
-        "HMD_FIRST_TRADED_PRICE"  : 1,
-        "HMD_HIGHEST_TRADED_PRICE": 1,
-        "HMD_LOWEST_TRADED_PRICE" : 1,
-        "HMD_LAST_TRADED_PRICE"   : 1,
-        "HMD_TOTAL_TRADED_VOLUME" : HMD_TOTAL_TRADED_VOLUME
-    }
-    
-    agt_ora.agt_put(table_name = 'IMS_HIST_MKT_DATA', data_dict = params) 
-    '''
-    
-    params = {
-    "HMD_INV_TICKER": HMD_INV_TICKER,
-    "HMD_START_DATETIME": datetime(2025, 12, 1, 9, 30),
-    "HMD_END_DATETIME": datetime(2025, 12, 1, 16, 0),
-    "HMD_FREQ_TYPE": "DAILY",
-    "HMD_START_BID_PRICE": 180.50,
-    "HMD_HIGHEST_BID_PRICE": 185.00,
-    "HMD_LOWEST_BID_PRICE": 179.00,
-    "HMD_LAST_BID_PRICE": 182.75,
-    "HMD_START_ASK_PRICE": 181.00,
-    "HMD_HIGHEST_ASK_PRICE": 185.50,
-    "HMD_LOWEST_ASK_PRICE": 179.50,
-    "HMD_LAST_ASK_PRICE": 183.00,
-    "HMD_FIRST_TRADED_PRICE": 180.75,
-    "HMD_HIGHEST_TRADED_PRICE": 185.25,
-    "HMD_LOWEST_TRADED_PRICE": 179.25,
-    "HMD_LAST_TRADED_PRICE": 182.90,
-    "HMD_TOTAL_TRADED_VOLUME": 1000000
-    }
-    print("params",params)
-    agt_ora.agt_put(table_name = 'IMS_HIST_MKT_DATA', data_dict = params) 
+        agt_ora.agt_put(table_name = 'IMS_HIST_MKT_DATA', data_dict = obj) 
 
     return status
   
@@ -321,7 +261,7 @@ if __name__ == '__main__':
  # create log agent
         
     file_folder = FOLDER_LOG
-    file_name   = 'mw_get_hist_mkt_data.log'
+    file_name   = 'get_hist_mkt_data.log'
     file_kind   = AGT_KND_LOG
   
     log_params  = (file_folder, file_name, file_kind)
@@ -332,7 +272,7 @@ if __name__ == '__main__':
     # create error agent
     
     file_folder = FOLDER_ERR
-    file_name   = 'mw_get_hist_mkt_data.err'
+    file_name   = 'get_hist_mkt_data.err'
     file_kind   = AGT_KND_ERR
 
     err_params  = (file_folder, file_name, file_kind)
