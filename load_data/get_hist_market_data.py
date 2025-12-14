@@ -9,6 +9,8 @@
 #                    run for BID then for ASK saving in a list
 # 2025-12-13 103 MW  changing so that ASK prices don't overwrite 
 #                    the BID prices - using bid_dict and ask_dict
+# 2025-12-14 104 MW  using start and end date times as parameters
+#                    and calculating the period from those
 # ------------------------------------------------------------
 
 from   ibapi.sync_wrapper import TWSSyncWrapper
@@ -40,7 +42,7 @@ from utils.config import FOLDER_ERR,  FOLDER_LOG
 # mw_get_hist_mkt_data
 # ----------------------------------------------------------------------------------------------------------------------------
 
-def get_hist_mkt_data(agt_err, agt_log, agt_ora):
+def get_hist_mkt_data(agt_err, agt_log, agt_ora, start_datetime_str, end_datetime_str):
 
     # Create the wrapper
     tws = TWSSyncWrapper(timeout=10) # 10 seconds timeout
@@ -62,7 +64,7 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
             print(f"Server time: {time_value}")
         except Exception as e:
             agt_err.title_put(text = 'Error getting server time')
-            agt_err.title_put(text = e)
+            agt_err.log_put(e)
             print(f"Error getting server time: {e}")
 
         
@@ -72,15 +74,21 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
         ticker_list = get_tickers()
         
         # Set up the parameters to ask for
-        #my_end_date_time="", # Empty for current time
-        my_end_date_time="20251130 23:59:59 UTC" # Hardcoded to test format
-        #my_duration_str="1 D" # goes back 1 day
-        my_duration_str="1 W" # goes back 1 week
-        #my_duration_str="1 M" # goes back 1 month
-        #my_duration_str="1 Y" # goes back 1 year
-        #my_bar_size_setting="1 hour"
-        my_bar_size_setting="1 MIN"
+        bar_size_setting="1 MIN"
 
+        # calculate the duration_str from the start and end date times
+        fmt = "%Y%m%d %H:%M:%S %Z"
+        start_dt = datetime.strptime(start_datetime_str, fmt)
+        end_dt = datetime.strptime(end_datetime_str, fmt)
+
+        delta = end_dt - start_dt
+        number_days = int(delta.total_seconds() / 86400)  # exact fractional days convert to integer
+        
+        duration_str = f"{number_days} D"
+        print("duration_str:", duration_str)
+        
+        agt_log.log_put(f"Requesting date for duration string {duration_str}")
+            
         # go through each ticker at a time
         
         for this_ticker in ticker_list:
@@ -102,20 +110,20 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
                 print(f"Contract details: {this_ticker if details else 'No details'}")
             except Exception as e:
                 agt_err.title_put(text = 'Error getting server time')
-                agt_err.title_put(text = e)
+                agt_err.log_put(e)
                 print(f"Error getting contract details: {e}")
                 
             # First get the historical BID data for this ticker
-            my_what_to_show="BID"
+            what_to_show="BID"
             
-            agt_log.log_put(f"About to request Historical BID Data for : {this_ticker} {my_end_date_time} {my_duration_str} {my_bar_size_setting} {my_what_to_show}")
+            agt_log.log_put(f"About to request Historical BID Data for : {this_ticker} {end_datetime_str} {duration_str} {bar_size_setting} {what_to_show}")
             try:
                 bid_bars = tws.get_historical_data(
                                 contract=               contract,
-                                end_date_time=          my_end_date_time, 
-                                duration_str=           my_duration_str, 
-                                bar_size_setting=       my_bar_size_setting,
-                                what_to_show=           my_what_to_show,
+                                end_date_time=          end_datetime_str, 
+                                duration_str=           duration_str, 
+                                bar_size_setting=       bar_size_setting,
+                                what_to_show=           what_to_show,
                                 use_rth=                True
                 )
                 #agt_log.title_put(text = 'Requesting bid data')
@@ -151,24 +159,22 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
                     
                                 
             except Exception as e:
-                agt_err.title_put(text = 'Error getting contract details')
-                this_error = e
-                print(this_error)
-                agt_err.title_put(text = this_error)
+                agt_err.title_put(text = 'Error getting server time')
+                agt_err.log_put(e)
                 print(f"Error getting contract details: {e}")
                         
             # Next get the historical ASK data for this ticker
-            my_what_to_show="ASK"
+            what_to_show="ASK"
             #agt_log.title_put(text = 'Requesting ask data')
-            agt_log.log_put(f"About to request Historical ASK Data for : {this_ticker} {my_end_date_time} {my_duration_str} {my_bar_size_setting} {my_what_to_show}")
+            agt_log.log_put(f"About to request Historical ASK Data for : {this_ticker} {end_datetime_str} {duration_str} {bar_size_setting} {what_to_show}")
             
             try:
                 ask_bars = tws.get_historical_data(
                                 contract=               contract,
-                                end_date_time=          my_end_date_time, 
-                                duration_str=           my_duration_str, 
-                                bar_size_setting=       my_bar_size_setting,
-                                what_to_show=           my_what_to_show,
+                                end_date_time=          end_datetime_str, 
+                                duration_str=           duration_str, 
+                                bar_size_setting=       bar_size_setting,
+                                what_to_show=           what_to_show,
                                 use_rth=                True
                 )
                 agt_log.log_put(f"ASK data received: {len(ask_bars)} ask_bars")
@@ -206,10 +212,9 @@ def get_hist_mkt_data(agt_err, agt_log, agt_ora):
                     
             except Exception as e:
                 agt_err.title_put(text = 'Error getting historical ask data')
-                agt_err.title_put(text = e)
+                agt_err.log_put(e)
                 print(f"Error getting historical ask data: {e}")
-                
-            
+                    
     
     finally:
         # Disconnect
@@ -272,10 +277,21 @@ if __name__ == '__main__':
     # create oracle agent
         
     ora_params      = ('L02.local', DB_PORT, DB_TIMEZONE, DB_TNS_SERVICE, "IMS", 'l02focus')
-    agt_ora         = AvaAgtOra(key = 'agent - ora', agt_ctl = None, agt_err = agt_err, agt_log = agt_log, params = ora_params)
+    agt_ora         = AvaAgtOra(key     = 'agent - ora', 
+                                agt_ctl = None, 
+                                agt_err = agt_err, 
+                                agt_log = agt_log, 
+                                params  = ora_params)
    
-    status = get_hist_mkt_data(agt_err = agt_err, 
-                               agt_log = agt_log, 
-                               agt_ora = agt_ora)
+    # setting up start and end date times as strings
+    
+    start_datetime_str ="20251120 23:59:59 UTC"
+    end_datetime_str   ="20251130 23:59:59 UTC"
+    
+    status = get_hist_mkt_data(agt_err            = agt_err, 
+                               agt_log            = agt_log, 
+                               agt_ora            = agt_ora,
+                               start_datetime_str = start_datetime_str, 
+                               end_datetime_str   = end_datetime_str)
     
     
