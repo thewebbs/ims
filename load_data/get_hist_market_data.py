@@ -11,6 +11,8 @@
 #                    the BID prices - using bid_dict and ask_dict
 # 2025-12-14 104 MW  using start and end date times as parameters
 #                    and calculating the period from those
+# 2025-12-16 105 MW  Instead of hard-coded database user and 
+#                    password, use host_name_passwd_get
 # ------------------------------------------------------------
 
 from   ibapi.sync_wrapper import TWSSyncWrapper
@@ -19,6 +21,7 @@ from   datetime           import datetime
 from   zoneinfo           import ZoneInfo
 
 from   agents.AvaAgtOra   import AvaAgtOra
+from   agents.AvaAgtOs    import host_name_passwd_get
 from   agents.AvaAgtLog   import AvaAgtLog
 
 
@@ -276,7 +279,10 @@ if __name__ == '__main__':
        
     # create oracle agent
         
-    ora_params      = ('L02.local', DB_PORT, DB_TIMEZONE, DB_TNS_SERVICE, "IMS", 'l02focus')
+    (hostname, password) = host_name_passwd_get()
+    
+    #ora_params      = ('L02.local', DB_PORT, DB_TIMEZONE, DB_TNS_SERVICE, "IMS", 'l02focus')
+    ora_params      = (hostname, DB_PORT, DB_TIMEZONE, DB_TNS_SERVICE, 'IMS', password)
     agt_ora         = AvaAgtOra(key     = 'agent - ora', 
                                 agt_ctl = None, 
                                 agt_err = agt_err, 
